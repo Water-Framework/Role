@@ -16,9 +16,9 @@
 
 package it.water.role.service;
 
-import it.water.core.api.permission.Role;
-import it.water.core.api.permission.RoleManager;
+import it.water.core.api.model.Role;
 import it.water.core.api.repository.query.Query;
+import it.water.core.api.role.RoleManager;
 import it.water.core.interceptors.annotations.FrameworkComponent;
 import it.water.core.interceptors.annotations.Inject;
 import it.water.repository.entity.model.exceptions.NoResultException;

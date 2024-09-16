@@ -1,6 +1,6 @@
 package it.water.role.service;
 
-import it.water.core.api.permission.Role;
+import it.water.core.api.model.Role;
 import it.water.core.api.registry.filter.ComponentFilterBuilder;
 import it.water.core.interceptors.annotations.FrameworkComponent;
 import it.water.core.interceptors.annotations.Inject;
@@ -50,12 +50,18 @@ public class RoleSystemServiceImpl extends BaseEntitySystemServiceImpl<WaterRole
 
     @Override
     public void addUserRole(long userId, Role role) {
+        if (role == null)
+            return;
+        logger.debug("Adding role {} to user {}", role.getName(), userId);
         WaterUserRole waterUserRoles = new WaterUserRole((WaterRole) role, userId);
         userRoleRepository.persist(waterUserRoles);
     }
 
     @Override
     public void removeUserRole(long userId, Role role) {
+        if (role == null)
+            return;
+        logger.debug("removing role {} from user {}", role.getName(), userId);
         userRoleRepository.removeUserRole(userId, (WaterUserRole) role);
     }
 }

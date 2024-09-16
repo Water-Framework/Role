@@ -1,8 +1,8 @@
 package it.water.role.model;
 
 import io.swagger.annotations.ApiModelProperty;
+import it.water.core.api.model.Role;
 import it.water.core.api.permission.ProtectedEntity;
-import it.water.core.api.permission.Role;
 import it.water.core.permission.action.CrudActions;
 import it.water.core.permission.annotations.AccessControl;
 import it.water.core.permission.annotations.DefaultRoleAccess;
@@ -32,16 +32,16 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode(of = {"id", "name"})
 //Actions and default roles access
-@AccessControl(availableActions = {CrudActions.SAVE, CrudActions.UPDATE, CrudActions.FIND, CrudActions.FIND_ALL, CrudActions.REMOVE, RoleActions.ASSIGN,RoleActions.UNASSIGN},
+@AccessControl(availableActions = {CrudActions.SAVE, CrudActions.UPDATE, CrudActions.FIND, CrudActions.FIND_ALL, CrudActions.REMOVE, RoleActions.ASSIGN, RoleActions.UNASSIGN},
         rolesPermissions = {
                 //Admin role can do everything
-                @DefaultRoleAccess(roleName = WaterRole.DEFAULT_MANAGER_ROLE, actions = {CrudActions.SAVE, CrudActions.UPDATE, CrudActions.FIND, CrudActions.FIND_ALL, CrudActions.REMOVE,RoleActions.ASSIGN,RoleActions.UNASSIGN}),
+                @DefaultRoleAccess(roleName = WaterRole.DEFAULT_MANAGER_ROLE, actions = {CrudActions.SAVE, CrudActions.UPDATE, CrudActions.FIND, CrudActions.FIND_ALL, CrudActions.REMOVE, RoleActions.ASSIGN, RoleActions.UNASSIGN}),
                 //Viwer has read only access
                 @DefaultRoleAccess(roleName = WaterRole.DEFAULT_VIEWER_ROLE, actions = {CrudActions.FIND, CrudActions.FIND_ALL}),
                 //Editor can do anything but remove
-                @DefaultRoleAccess(roleName = WaterRole.DEFAULT_EDITOR_ROLE, actions = {CrudActions.SAVE, CrudActions.UPDATE, CrudActions.FIND, CrudActions.FIND_ALL,RoleActions.ASSIGN,RoleActions.UNASSIGN})
+                @DefaultRoleAccess(roleName = WaterRole.DEFAULT_EDITOR_ROLE, actions = {CrudActions.SAVE, CrudActions.UPDATE, CrudActions.FIND, CrudActions.FIND_ALL, RoleActions.ASSIGN, RoleActions.UNASSIGN})
         })
-public class WaterRole extends AbstractJpaEntity implements Role,ProtectedEntity {
+public class WaterRole extends AbstractJpaEntity implements Role, ProtectedEntity {
 
     public static final String DEFAULT_MANAGER_ROLE = "roleManager";
     public static final String DEFAULT_VIEWER_ROLE = "roleViewer";

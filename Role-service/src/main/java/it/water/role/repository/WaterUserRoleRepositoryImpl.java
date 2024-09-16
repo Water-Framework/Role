@@ -1,7 +1,7 @@
 package it.water.role.repository;
 
 import it.water.core.api.model.PaginableResult;
-import it.water.core.api.permission.Role;
+import it.water.core.api.model.Role;
 import it.water.core.api.repository.query.Query;
 import it.water.core.interceptors.annotations.FrameworkComponent;
 import it.water.repository.entity.model.exceptions.NoResultException;

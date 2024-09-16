@@ -16,7 +16,7 @@
 
 package it.water.role.service;
 
-import it.water.core.api.permission.Role;
+import it.water.core.api.model.Role;
 import it.water.core.api.service.integration.RoleIntegrationClient;
 import it.water.core.interceptors.annotations.FrameworkComponent;
 import it.water.core.interceptors.annotations.Inject;
