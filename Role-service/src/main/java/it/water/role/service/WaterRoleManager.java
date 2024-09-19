@@ -68,17 +68,20 @@ public class WaterRoleManager implements RoleManager {
 
     @Override
     public boolean addRole(long userId, Role role) {
-        return false;
+        roleSystemApi.addUserRole(userId, role);
+        return true;
     }
 
     @Override
     public Role getRole(String roleName) {
-        return null;
+        Query q = this.roleSystemApi.getQueryBuilderInstance().field("name").equalTo(roleName);
+        return this.roleSystemApi.find(q);
     }
 
     @Override
     public boolean removeRole(long userId, Role role) {
-        return false;
+        this.roleSystemApi.removeUserRole(userId, role);
+        return true;
     }
 
     private Role findRole(String roleName) {

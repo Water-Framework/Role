@@ -2,11 +2,12 @@ package it.water.role;
 
 import it.water.core.api.bundle.Runtime;
 import it.water.core.api.model.PaginableResult;
-import it.water.core.api.permission.Role;
-import it.water.core.api.permission.RoleManager;
+import it.water.core.api.model.Role;
 import it.water.core.api.registry.ComponentRegistry;
 import it.water.core.api.repository.query.Query;
+import it.water.core.api.role.RoleManager;
 import it.water.core.api.service.Service;
+import it.water.core.api.user.UserManager;
 import it.water.core.interceptors.annotations.Inject;
 import it.water.core.model.exceptions.ValidationException;
 import it.water.core.model.exceptions.WaterRuntimeException;
@@ -60,6 +61,11 @@ public class WaterRoleApiTest implements Service {
     //test role manager
     private RoleManager roleManager;
 
+    @Inject
+    @Setter
+    //test role manager
+    private UserManager userManager;
+
     //admin user
     private it.water.core.api.model.User adminUser;
     private it.water.core.api.model.User roleManagerUser;
@@ -80,10 +86,10 @@ public class WaterRoleApiTest implements Service {
         Assertions.assertNotNull(roleViewerRole);
         Assertions.assertNotNull(roleEditorRole);
         //impersonate admin so we can test the happy path
-        adminUser = permissionManager.findUser("admin");
-        roleManagerUser = permissionManager.addUser("manager", "name", "lastname", "manager@a.com", false);
-        roleViewerUser = permissionManager.addUser("viewer", "name", "lastname", "viewer@a.com", false);
-        roleEditorUser = permissionManager.addUser("editor", "name", "lastname", "editor@a.com", false);
+        adminUser = userManager.findUser("admin");
+        roleManagerUser = userManager.addUser("manager", "name", "lastname", "manager@a.com", "Password1_", "salt", false);
+        roleViewerUser = userManager.addUser("viewer", "name", "lastname", "viewer@a.com", "Password1_", "salt", false);
+        roleEditorUser = userManager.addUser("editor", "name", "lastname", "editor@a.com", "Password1_", "salt", false);
         //starting with admin permissions
         roleManager.addRole(roleManagerUser.getId(), roleManagerRole);
         roleManager.addRole(roleViewerUser.getId(), roleViewerRole);
@@ -123,7 +129,7 @@ public class WaterRoleApiTest implements Service {
     @Test
     @Order(3)
     public void updateShouldWork() {
-        Query q = this.roleRepository.getQueryBuilderInstance().createQueryFilter("exampleField=exampleField0");
+        Query q = this.roleRepository.getQueryBuilderInstance().createQueryFilter("name=exampleField0");
         WaterRole entity = this.roleApi.find(q);
         Assertions.assertNotNull(entity);
         entity = updateRole(entity, "exampleFieldUpdated", entity.getDescription());
@@ -138,7 +144,7 @@ public class WaterRoleApiTest implements Service {
     @Test
     @Order(4)
     public void updateShouldFailWithWrongVersion() {
-        Query q = this.roleRepository.getQueryBuilderInstance().createQueryFilter("exampleField=exampleFieldUpdated");
+        Query q = this.roleRepository.getQueryBuilderInstance().createQueryFilter("name=exampleFieldUpdated");
         WaterRole errorEntity = this.roleApi.find(q);
         Assertions.assertEquals("exampleFieldUpdated", errorEntity.getName());
         Assertions.assertEquals(2, errorEntity.getEntityVersion());
@@ -203,7 +209,7 @@ public class WaterRoleApiTest implements Service {
         Assertions.assertThrows(DuplicateEntityException.class, () -> this.roleApi.save(duplicated));
         WaterRole secondEntity = createRole(2);
         this.roleApi.save(secondEntity);
-        WaterRole updatedSecondEntity = updateRole(secondEntity, "updateName", secondEntity.getDescription());
+        WaterRole updatedSecondEntity = updateRole(secondEntity, entity.getName(), secondEntity.getDescription());
         //cannot update an entity colliding with other entity on unique constraint
         Assertions.assertThrows(DuplicateEntityException.class, () -> this.roleApi.update(updatedSecondEntity));
     }
@@ -259,6 +265,13 @@ public class WaterRoleApiTest implements Service {
         Assertions.assertDoesNotThrow(() -> this.roleApi.update(entity));
         Assertions.assertDoesNotThrow(() -> this.roleApi.find(updatedEntity.getId()));
         Assertions.assertThrows(UnauthorizedException.class, () -> this.roleApi.remove(updatedEntity.getId()));
+    }
+
+    @Order(13)
+    @Test
+    public void testRoleManager(){
+        Assertions.assertTrue(roleManager.hasRole(roleViewerRole.getId(), WaterRole.DEFAULT_VIEWER_ROLE));
+        Assertions.assertFalse(roleManager.getUserRoles(roleViewerUser.getId()).isEmpty());
     }
 
     private WaterRole createRole(int seed) {
