@@ -25,7 +25,7 @@ import lombok.Setter;
 
 import java.util.Collection;
 
-@FrameworkComponent
+@FrameworkComponent(priority = 1)
 public class RoleIntegrationLocalClient implements RoleIntegrationClient {
 
     @Inject

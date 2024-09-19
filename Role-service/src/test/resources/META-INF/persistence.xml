@@ -22,6 +22,7 @@
 
     <persistence-unit name="role-persistence-unit" transaction-type="RESOURCE_LOCAL">
         <class>it.water.role.model.WaterRole</class>
+        <class>it.water.role.model.WaterUserRole</class>
         <properties>
             <!-- Configurazione della connessione al database -->
             <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>

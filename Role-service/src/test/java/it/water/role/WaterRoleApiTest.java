@@ -15,14 +15,21 @@ import it.water.core.permission.exceptions.UnauthorizedException;
 import it.water.core.testing.utils.api.TestPermissionManager;
 import it.water.core.testing.utils.bundle.TestRuntimeInitializer;
 import it.water.core.testing.utils.junit.WaterTestExtension;
+import it.water.core.testing.utils.runtime.TestRuntimeUtils;
 import it.water.repository.entity.model.exceptions.DuplicateEntityException;
 import it.water.role.api.RoleApi;
 import it.water.role.api.RoleRepository;
 import it.water.role.api.RoleSystemApi;
+import it.water.role.api.UserRoleRepository;
 import it.water.role.model.WaterRole;
+import it.water.role.model.WaterUserRole;
 import lombok.Setter;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Generated with Water Generator.
@@ -53,6 +60,10 @@ public class WaterRoleApiTest implements Service {
 
     @Inject
     @Setter
+    private UserRoleRepository userRoleRepository;
+
+    @Inject
+    @Setter
     //default permission manager in test environment;
     private TestPermissionManager permissionManager;
 
@@ -75,6 +86,7 @@ public class WaterRoleApiTest implements Service {
     private Role roleManagerRole;
     private Role roleViewerRole;
     private Role roleEditorRole;
+    private Role tempRole;
 
     @BeforeAll
     public void beforeAll() {
@@ -82,6 +94,7 @@ public class WaterRoleApiTest implements Service {
         roleManagerRole = roleManager.getRole(WaterRole.DEFAULT_MANAGER_ROLE);
         roleViewerRole = roleManager.getRole(WaterRole.DEFAULT_VIEWER_ROLE);
         roleEditorRole = roleManager.getRole(WaterRole.DEFAULT_EDITOR_ROLE);
+        tempRole = roleManager.createIfNotExists("tempRole");
         Assertions.assertNotNull(roleManagerRole);
         Assertions.assertNotNull(roleViewerRole);
         Assertions.assertNotNull(roleEditorRole);
@@ -94,7 +107,8 @@ public class WaterRoleApiTest implements Service {
         roleManager.addRole(roleManagerUser.getId(), roleManagerRole);
         roleManager.addRole(roleViewerUser.getId(), roleViewerRole);
         roleManager.addRole(roleEditorUser.getId(), roleEditorRole);
-        //default security context in test environment is admin
+        roleManager.addRole(roleViewerUser.getId(),tempRole);
+        TestRuntimeUtils.impersonateAdmin();
     }
 
     /**
@@ -159,7 +173,7 @@ public class WaterRoleApiTest implements Service {
     @Order(5)
     public void findAllShouldWork() {
         PaginableResult<WaterRole> all = this.roleApi.findAll(null, -1, -1, null);
-        Assertions.assertTrue(all.getResults().size() == 1);
+        Assertions.assertTrue(all.getResults().size() == 5);
     }
 
     /**
@@ -178,7 +192,7 @@ public class WaterRoleApiTest implements Service {
         Assertions.assertEquals(1, paginated.getCurrentPage());
         Assertions.assertEquals(2, paginated.getNextPage());
         paginated = this.roleApi.findAll(null, 7, 2, null);
-        Assertions.assertEquals(3, paginated.getResults().size());
+        Assertions.assertEquals(7, paginated.getResults().size());
         Assertions.assertEquals(2, paginated.getCurrentPage());
         Assertions.assertEquals(1, paginated.getNextPage());
     }
@@ -188,12 +202,14 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(7)
-    public void removeAllShouldWork() {
+    public void removeShouldWork() {
         PaginableResult<WaterRole> paginated = this.roleApi.findAll(null, -1, -1, null);
         paginated.getResults().forEach(entity -> {
-            this.roleApi.remove(entity.getId());
+            //removing just roles created for testing purpose
+            if(entity.getName().startsWith("example"))
+                this.roleApi.remove(entity.getId());
         });
-        Assertions.assertTrue(this.roleApi.countAll(null) == 0);
+        Assertions.assertEquals(4,this.roleApi.countAll(null));
     }
 
     /**
@@ -268,6 +284,18 @@ public class WaterRoleApiTest implements Service {
     }
 
     @Order(13)
+    @Test
+    public void testRepository(){
+        Collection<Role> roles = userRoleRepository.findUserRoles(roleViewerUser.getId());
+        Assertions.assertFalse(roles.isEmpty());
+        Assertions.assertEquals(2,roles.size());
+        userRoleRepository.removeUserRole(roleViewerUser.getId(),(WaterUserRole) tempRole);
+        Assertions.assertEquals(1,roles.size());
+        //adding role again for next tests
+        roleManager.addRole(roleViewerUser.getId(),tempRole);
+    }
+
+    @Order(14)
     @Test
     public void testRoleManager(){
         Assertions.assertTrue(roleManager.hasRole(roleViewerRole.getId(), WaterRole.DEFAULT_VIEWER_ROLE));

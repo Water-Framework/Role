@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-@FrameworkComponent
+@FrameworkComponent(priority = 1, services = RoleManager.class)
 public class WaterRoleManager implements RoleManager {
     private static Logger log = LoggerFactory.getLogger(WaterRoleManager.class);
     @Inject
