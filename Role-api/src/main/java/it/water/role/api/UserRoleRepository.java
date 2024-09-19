@@ -14,5 +14,5 @@ import java.util.Collection;
 public interface UserRoleRepository extends BaseRepository<WaterUserRole> {
     Collection<Role> findUserRoles(long userId);
 
-    void removeUserRole(long userId, WaterUserRole role);
+    void removeUserRole(long userId, long roleId);
 }

@@ -9,7 +9,7 @@ Feature: Check Role Rest Api Response
     And header Accept = 'application/json'
     Given url 'http://localhost:8080/water/roles'
     # ---- Add entity fields here -----
-    And request { "exampleField": "exampleField"}
+    And request { "name": "exampleField","description":"role"}
     # ---------------------------------
     When method POST
     Then status 200
@@ -17,10 +17,11 @@ Feature: Check Role Rest Api Response
     And match response ==
     """
       { "id": #number,
+        "name":"exampleField"
         "entityVersion":1,
         "entityCreateDate":'#number',
         "entityModifyDate":'#number',
-        "exampleField": 'exampleField'
+        "description": "role"
        }
     """
     * def entityId = response.id
@@ -31,7 +32,7 @@ Feature: Check Role Rest Api Response
     And header Accept = 'application/json'
     Given url 'http://localhost:8080/water/roles'
     # ---- Add entity fields here -----
-    And request { "id":"#(entityId)","entityVersion":1,"exampleField": "exampleFieldUpdated"}
+    And request { "id":"#(entityId)","entityVersion":1,"name": "nameUpdated","description":"description"}
     # ---------------------------------
     When method PUT
     Then status 200
@@ -42,7 +43,8 @@ Feature: Check Role Rest Api Response
         "entityVersion":2,
         "entityCreateDate":'#number',
         "entityModifyDate":'#number',
-        "exampleField": 'exampleFieldUpdated'
+        "name": "nameUpdated",
+        "description":"description"
        }
     """
   
@@ -61,7 +63,8 @@ Feature: Check Role Rest Api Response
         "entityVersion":2,
         "entityCreateDate":'#number',
         "entityModifyDate":'#number',
-        "exampleField": 'exampleFieldUpdated'
+        "name": 'nameUpdated',
+        "description":"description"
        }
     """
     
@@ -85,7 +88,8 @@ Feature: Check Role Rest Api Response
             "entityVersion":2,
             "entityCreateDate":'#number',
             "entityModifyDate":'#number',
-            "exampleField": 'exampleFieldUpdated'
+            "name": 'nameUpdated',
+            "description":"description"
           }
         ]
       }
