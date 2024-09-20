@@ -1,8 +1,10 @@
 package it.water.role.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiModelProperty;
 import it.water.core.api.model.Role;
 import it.water.core.api.permission.ProtectedEntity;
+import it.water.core.api.service.rest.WaterJsonView;
 import it.water.core.permission.action.CrudActions;
 import it.water.core.permission.annotations.AccessControl;
 import it.water.core.permission.annotations.DefaultRoleAccess;
@@ -57,6 +59,7 @@ public class WaterRole extends AbstractJpaEntity implements Role, ProtectedEntit
     @Size(max = 255)
     @ApiModelProperty(required = false)
     @NonNull
+    @JsonView(WaterJsonView.Public.class)
     private String name;
     /**
      * String description for Role
@@ -67,6 +70,7 @@ public class WaterRole extends AbstractJpaEntity implements Role, ProtectedEntit
     @NoMalitiusCode
     @ApiModelProperty(required = false)
     @NonNull
+    @JsonView(WaterJsonView.Extended.class)
     private String description;
 
 }

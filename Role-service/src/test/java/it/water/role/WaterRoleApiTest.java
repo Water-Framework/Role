@@ -114,7 +114,7 @@ public class WaterRoleApiTest implements Service {
         roleManager.addRole(roleViewerUser.getId(), roleViewerRole);
         roleManager.addRole(roleEditorUser.getId(), roleEditorRole);
         roleManager.addRole(roleViewerUser.getId(),tempRole);
-        TestRuntimeUtils.impersonateAdmin();
+        TestRuntimeUtils.impersonateAdmin(componentRegistry);
     }
 
     /**

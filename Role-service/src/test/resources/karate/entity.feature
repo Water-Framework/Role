@@ -17,7 +17,7 @@ Feature: Check Role Rest Api Response
     And match response ==
     """
       { "id": #number,
-        "name":"exampleField"
+        "name":"exampleField",
         "entityVersion":1,
         "entityCreateDate":'#number',
         "entityModifyDate":'#number',
@@ -83,6 +83,30 @@ Feature: Check Role Rest Api Response
         "nextPage":1,
         "delta":20,
         "results":[
+           {
+              "id":#number,
+              "entityVersion":#number,
+              "entityCreateDate":'#number',
+              "entityModifyDate":'#number',
+              "name":"roleManager",
+              "description":""
+           },
+           {
+              "id":#number,
+              "entityVersion":#number,
+              "entityCreateDate":'#number',
+              "entityModifyDate":'#number',
+              "name":"roleViewer",
+              "description":""
+           },
+           {
+              "id":#number,
+              "entityVersion":#number,
+              "entityCreateDate":'#number',
+              "entityModifyDate":'#number',
+              "name":"roleEditor",
+              "description":""
+           },
           {
             "id": #number,
             "entityVersion":2,
