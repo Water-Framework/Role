@@ -302,7 +302,7 @@ public class WaterRoleApiTest implements Service {
     @Order(14)
     @Test
     public void testRoleManager(){
-        Assertions.assertTrue(roleManager.hasRole(roleViewerRole.getId(), WaterRole.DEFAULT_VIEWER_ROLE));
+        Assertions.assertTrue(roleManager.hasRole(roleViewerUser.getId(), WaterRole.DEFAULT_VIEWER_ROLE));
         Assertions.assertFalse(roleManager.getUserRoles(roleViewerUser.getId()).isEmpty());
         roleManager.addRole(roleViewerUser.getId(),tempRole);
         Assertions.assertEquals(2,roleManager.getUserRoles(roleViewerUser.getId()).size());
