@@ -29,17 +29,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.platform.commons.util.RuntimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Collections;
 
 @SpringBootTest(classes = RoleApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {
         "water.rest.security.jwt.validate=false",
         "water.testMode=true"
 })
 public class RoleRestSpringApiTest {
+
+    @LocalServerPort
+    private int serverPort;
 
     @Autowired
     private ComponentRegistry componentRegistry;
@@ -53,7 +57,10 @@ public class RoleRestSpringApiTest {
 
     @Karate.Test
     Karate restInterfaceTest() {
-        return Karate.run("../Role-service/src/test/resources/karate");
+        return Karate.run("../Role-service/src/test/resources/karate")
+                .systemProperty("webServerPort", String.valueOf(serverPort))
+                .systemProperty("host", "localhost")
+                .systemProperty("protocol", "http");
     }
 
 }

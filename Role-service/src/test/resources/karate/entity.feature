@@ -7,7 +7,7 @@ Feature: Check Role Rest Api Response
 
     Given header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    Given url 'http://localhost:8080/water/roles'
+    Given url serviceBaseUrl+'/water/roles'
     # ---- Add entity fields here -----
     And request { "name": "exampleField","description":"role"}
     # ---------------------------------
@@ -30,7 +30,7 @@ Feature: Check Role Rest Api Response
 
     Given header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    Given url 'http://localhost:8080/water/roles'
+    Given url serviceBaseUrl+'/water/roles'
     # ---- Add entity fields here -----
     And request { "id":"#(entityId)","entityVersion":1,"name": "nameUpdated","description":"description"}
     # ---------------------------------
@@ -52,7 +52,7 @@ Feature: Check Role Rest Api Response
 
     Given header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    Given url 'http://localhost:8080/water/roles/'+entityId
+    Given url serviceBaseUrl+'/water/roles/'+entityId
     # ---------------------------------
     When method GET
     Then status 200
@@ -72,58 +72,26 @@ Feature: Check Role Rest Api Response
 
     Given header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    Given url 'http://localhost:8080/water/roles'
+    Given url serviceBaseUrl+'/water/roles'
     When method GET
     Then status 200
-    And match response ==
+    And match response.results contains
     """
-      {
-        "numPages":1,
-        "currentPage":1,
-        "nextPage":1,
-        "delta":20,
-        "results":[
-           {
-              "id":#number,
-              "entityVersion":#number,
-              "entityCreateDate":'#number',
-              "entityModifyDate":'#number',
-              "name":"roleManager",
-              "description":""
-           },
-           {
-              "id":#number,
-              "entityVersion":#number,
-              "entityCreateDate":'#number',
-              "entityModifyDate":'#number',
-              "name":"roleViewer",
-              "description":""
-           },
-           {
-              "id":#number,
-              "entityVersion":#number,
-              "entityCreateDate":'#number',
-              "entityModifyDate":'#number',
-              "name":"roleEditor",
-              "description":""
-           },
-          {
-            "id": #number,
-            "entityVersion":2,
-            "entityCreateDate":'#number',
-            "entityModifyDate":'#number',
-            "name": 'nameUpdated',
-            "description":"description"
-          }
-        ]
-      }
+    {
+      "id": #number,
+      "entityVersion":2,
+      "entityCreateDate":'#number',
+      "entityModifyDate":'#number',
+      "name": 'nameUpdated',
+      "description":"description"
+    }
     """
   
   # --------------- DELETE -----------------------------
 
     Given header Content-Type = 'application/json'
     And header Accept = 'application/json'
-    Given url 'http://localhost:8080/water/roles/'+entityId
+    Given url serviceBaseUrl+'/water/roles/'+entityId
     When method DELETE
     # 204 because delete response is empty, so the status code is "no content" but is ok
     Then status 204

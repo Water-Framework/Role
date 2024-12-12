@@ -62,8 +62,7 @@ public class WaterRoleManager implements RoleManager {
 
     @Override
     public Set<Role> getUserRoles(long userId) {
-        Set<Role> userRoles = Collections.unmodifiableSet(new HashSet<>(roleSystemApi.findUserRoles(userId)));
-        return userRoles;
+        return Collections.unmodifiableSet(new HashSet<>(roleSystemApi.findUserRoles(userId)));
     }
 
     @Override

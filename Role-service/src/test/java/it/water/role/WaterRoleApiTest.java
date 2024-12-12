@@ -18,20 +18,16 @@ import it.water.core.testing.utils.bundle.TestRuntimeInitializer;
 import it.water.core.testing.utils.junit.WaterTestExtension;
 import it.water.core.testing.utils.runtime.TestRuntimeUtils;
 import it.water.repository.entity.model.exceptions.DuplicateEntityException;
-import it.water.repository.entity.model.exceptions.NoResultException;
 import it.water.role.api.RoleApi;
 import it.water.role.api.RoleRepository;
 import it.water.role.api.RoleSystemApi;
 import it.water.role.api.UserRoleRepository;
 import it.water.role.model.WaterRole;
-import it.water.role.model.WaterUserRole;
 import lombok.Setter;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * Generated with Water Generator.
@@ -42,7 +38,7 @@ import java.util.Set;
 @ExtendWith(WaterTestExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class WaterRoleApiTest implements Service {
+class WaterRoleApiTest implements Service {
 
     @Inject
     @Setter
@@ -95,7 +91,7 @@ public class WaterRoleApiTest implements Service {
     private Role tempRole;
 
     @BeforeAll
-    public void beforeAll() {
+    void beforeAll() {
         //getting user
         roleManagerRole = roleManager.getRole(WaterRole.DEFAULT_MANAGER_ROLE);
         roleViewerRole = roleManager.getRole(WaterRole.DEFAULT_VIEWER_ROLE);
@@ -113,7 +109,7 @@ public class WaterRoleApiTest implements Service {
         roleManager.addRole(roleManagerUser.getId(), roleManagerRole);
         roleManager.addRole(roleViewerUser.getId(), roleViewerRole);
         roleManager.addRole(roleEditorUser.getId(), roleEditorRole);
-        roleManager.addRole(roleViewerUser.getId(),tempRole);
+        roleManager.addRole(roleViewerUser.getId(), tempRole);
         TestRuntimeUtils.impersonateAdmin(componentRegistry);
     }
 
@@ -122,7 +118,7 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(1)
-    public void componentsInsantiatedCorrectly() {
+    void componentsInsantiatedCorrectly() {
         this.roleApi = this.componentRegistry.findComponent(RoleApi.class, null);
         Assertions.assertNotNull(this.roleApi);
         Assertions.assertNotNull(this.componentRegistry.findComponent(RoleSystemApi.class, null));
@@ -135,7 +131,7 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(2)
-    public void saveOk() {
+    void saveOk() {
         WaterRole entity = createRole(0);
         entity = this.roleApi.save(entity);
         Assertions.assertEquals(1, entity.getEntityVersion());
@@ -148,7 +144,7 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(3)
-    public void updateShouldWork() {
+    void updateShouldWork() {
         Query q = this.roleRepository.getQueryBuilderInstance().createQueryFilter("name=exampleField0");
         WaterRole entity = this.roleApi.find(q);
         Assertions.assertNotNull(entity);
@@ -163,7 +159,7 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(4)
-    public void updateShouldFailWithWrongVersion() {
+    void updateShouldFailWithWrongVersion() {
         Query q = this.roleRepository.getQueryBuilderInstance().createQueryFilter("name=exampleFieldUpdated");
         WaterRole errorEntity = this.roleApi.find(q);
         Assertions.assertEquals("exampleFieldUpdated", errorEntity.getName());
@@ -177,9 +173,9 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(5)
-    public void findAllShouldWork() {
+    void findAllShouldWork() {
         PaginableResult<WaterRole> all = this.roleApi.findAll(null, -1, -1, null);
-        Assertions.assertTrue(all.getResults().size() == 5);
+        Assertions.assertEquals(5,all.getResults().size());
     }
 
     /**
@@ -188,7 +184,7 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(6)
-    public void findAllPaginatedShouldWork() {
+    void findAllPaginatedShouldWork() {
         for (int i = 2; i < 11; i++) {
             WaterRole u = createRole(i);
             this.roleApi.save(u);
@@ -208,14 +204,14 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(7)
-    public void removeShouldWork() {
+    void removeShouldWork() {
         PaginableResult<WaterRole> paginated = this.roleApi.findAll(null, -1, -1, null);
         paginated.getResults().forEach(entity -> {
             //removing just roles created for testing purpose
-            if(entity.getName().startsWith("example"))
+            if (entity.getName().startsWith("example"))
                 this.roleApi.remove(entity.getId());
         });
-        Assertions.assertEquals(4,this.roleApi.countAll(null));
+        Assertions.assertEquals(4, this.roleApi.countAll(null));
     }
 
     /**
@@ -223,7 +219,7 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(8)
-    public void saveShouldFailOnDuplicatedEntity() {
+    void saveShouldFailOnDuplicatedEntity() {
         WaterRole entity = createRole(1);
         this.roleApi.save(entity);
         WaterRole duplicated = this.createRole(1);
@@ -241,7 +237,7 @@ public class WaterRoleApiTest implements Service {
      */
     @Test
     @Order(9)
-    public void updateShouldFailOnValidationFailure() {
+    void updateShouldFailOnValidationFailure() {
         WaterRole newEntity = new WaterRole("<script>function(){alert('ciao')!}</script>", "description");
         Assertions.assertThrows(ValidationException.class, () -> this.roleApi.save(newEntity));
     }
@@ -251,7 +247,7 @@ public class WaterRoleApiTest implements Service {
      */
     @Order(10)
     @Test
-    public void managerCanDoEverything() {
+    void managerCanDoEverything() {
         TestRuntimeInitializer.getInstance().impersonate(roleManagerUser, runtime);
         final WaterRole entity = createRole(101);
         WaterRole savedEntity = Assertions.assertDoesNotThrow(() -> this.roleApi.save(entity));
@@ -263,7 +259,7 @@ public class WaterRoleApiTest implements Service {
 
     @Order(11)
     @Test
-    public void viewerCannotSaveOrUpdateOrRemove() {
+    void viewerCannotSaveOrUpdateOrRemove() {
         TestRuntimeInitializer.getInstance().impersonate(roleViewerUser, runtime);
         final WaterRole entity = createRole(201);
         Assertions.assertThrows(UnauthorizedException.class, () -> this.roleApi.save(entity));
@@ -272,61 +268,63 @@ public class WaterRoleApiTest implements Service {
         Assertions.assertDoesNotThrow(() -> this.roleApi.find(found.getId()));
         //viewer cannot update or remove
         WaterRole updateFound = updateRole(found, "newName", found.getDescription());
+        long updateEntityId = updateFound.getId();
         Assertions.assertThrows(UnauthorizedException.class, () -> this.roleApi.update(updateFound));
-        Assertions.assertThrows(UnauthorizedException.class, () -> this.roleApi.remove(updateFound.getId()));
+        Assertions.assertThrows(UnauthorizedException.class, () -> this.roleApi.remove(updateEntityId));
     }
 
     @Order(12)
     @Test
-    public void editorCannotRemove() {
+    void editorCannotRemove() {
         TestRuntimeInitializer.getInstance().impersonate(roleEditorUser, runtime);
         final WaterRole entity = createRole(301);
         WaterRole savedEntity = Assertions.assertDoesNotThrow(() -> this.roleApi.save(entity));
         WaterRole updatedEntity = updateRole(savedEntity, "editorNewSavedEntity", savedEntity.getDescription());
         Assertions.assertDoesNotThrow(() -> this.roleApi.update(entity));
         Assertions.assertDoesNotThrow(() -> this.roleApi.find(updatedEntity.getId()));
-        Assertions.assertThrows(UnauthorizedException.class, () -> this.roleApi.remove(updatedEntity.getId()));
+        long updateEntityId = updatedEntity.getId();
+        Assertions.assertThrows(UnauthorizedException.class, () -> this.roleApi.remove(updateEntityId));
     }
 
     @Order(13)
     @Test
-    public void testRepository(){
+    void testRepository() {
         Collection<Role> roles = userRoleRepository.findUserRoles(roleViewerUser.getId());
         Assertions.assertFalse(roles.isEmpty());
-        Assertions.assertEquals(2,roles.size());
+        Assertions.assertEquals(2, roles.size());
         userRoleRepository.removeUserRole(roleViewerUser.getId(), tempRole.getId());
         roles = userRoleRepository.findUserRoles(roleViewerUser.getId());
-        Assertions.assertEquals(1,roles.size());
+        Assertions.assertEquals(1, roles.size());
     }
 
     @Order(14)
     @Test
-    public void testRoleManager(){
+    void testRoleManager() {
         Assertions.assertTrue(roleManager.hasRole(roleViewerUser.getId(), WaterRole.DEFAULT_VIEWER_ROLE));
         Assertions.assertFalse(roleManager.getUserRoles(roleViewerUser.getId()).isEmpty());
-        roleManager.addRole(roleViewerUser.getId(),tempRole);
-        Assertions.assertEquals(2,roleManager.getUserRoles(roleViewerUser.getId()).size());
-        roleManager.removeRole(roleViewerUser.getId(),tempRole);
-        Assertions.assertEquals(1,roleManager.getUserRoles(roleViewerUser.getId()).size());
+        roleManager.addRole(roleViewerUser.getId(), tempRole);
+        Assertions.assertEquals(2, roleManager.getUserRoles(roleViewerUser.getId()).size());
+        roleManager.removeRole(roleViewerUser.getId(), tempRole);
+        Assertions.assertEquals(1, roleManager.getUserRoles(roleViewerUser.getId()).size());
         Assertions.assertTrue(roleManager.exists(WaterRole.DEFAULT_VIEWER_ROLE));
     }
 
     @Order(15)
     @Test
-    public void testApis(){
+    void testApis() {
         roleApi.addUserRole(roleViewerUser.getId(), tempRole);
         Collection<Role> roles = userRoleRepository.findUserRoles(roleViewerUser.getId());
         Assertions.assertFalse(roles.isEmpty());
-        Assertions.assertEquals(2,roles.size());
+        Assertions.assertEquals(2, roles.size());
         roleApi.removeUserRole(roleViewerUser.getId(), tempRole);
         roles = userRoleRepository.findUserRoles(roleViewerUser.getId());
-        Assertions.assertEquals(1,roles.size());
+        Assertions.assertEquals(1, roles.size());
         Assertions.assertDoesNotThrow(() -> userRoleRepository.removeUserRole(roleViewerUser.getId(), -1));
     }
 
     @Order(16)
     @Test
-    public void testRoleLocalIntegrationClient(){
+    void testRoleLocalIntegrationClient() {
         Assertions.assertFalse(roleLocalIntegrationLocal.fetchUserRoles(roleViewerUser.getId()).isEmpty());
     }
 
