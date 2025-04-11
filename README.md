@@ -100,7 +100,7 @@ Role/
 │       └── main/resources/                     # Application resources
 │           ├── application.properties           # Spring application properties
 │           └── karate-config.js                  # Karate configuration file
-└── README.md                         # Project documentation (this file)
+└── README.md                         # Project documentation
 ```
 
 ## Getting Started
