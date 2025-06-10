@@ -1,5 +1,10 @@
 package it.water.role.service;
 
+import java.util.Collection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.water.core.api.model.Role;
 import it.water.core.api.registry.filter.ComponentFilterBuilder;
 import it.water.core.interceptors.annotations.FrameworkComponent;
@@ -12,12 +17,6 @@ import it.water.role.model.WaterRole;
 import it.water.role.model.WaterUserRole;
 import lombok.Getter;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 
 /**

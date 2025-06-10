@@ -32,7 +32,7 @@ import lombok.*;
 @Getter
 @Setter(AccessLevel.PROTECTED)
 @ToString
-@EqualsAndHashCode(of = {"id", "name"})
+@EqualsAndHashCode(of = {"name"},callSuper = true)
 //Actions and default roles access
 @AccessControl(availableActions = {CrudActions.SAVE, CrudActions.UPDATE, CrudActions.FIND, CrudActions.FIND_ALL, CrudActions.REMOVE, RoleActions.ASSIGN, RoleActions.UNASSIGN},
         rolesPermissions = {

@@ -18,8 +18,20 @@ package it.water.role.model;
 
 import it.water.core.validation.annotations.NotNullOnPersist;
 import it.water.repository.jpa.model.AbstractJpaEntity;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "userId"}))
@@ -30,7 +42,7 @@ import lombok.*;
 @Getter
 @Setter(AccessLevel.PROTECTED)
 @ToString
-@EqualsAndHashCode(of = {"id", "role","userId"})
+@EqualsAndHashCode(of = {"role","userId"},callSuper = true)
 public class WaterUserRole extends AbstractJpaEntity {
     @NonNull
     @NotNullOnPersist
@@ -39,5 +51,5 @@ public class WaterUserRole extends AbstractJpaEntity {
 
     @NonNull
     @NotNullOnPersist
-    private long userId;
+    private Long userId;
 }

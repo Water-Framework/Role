@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 @FrameworkRestController(referredRestApi = RoleRestApi.class)
 public class RoleRestControllerImpl extends BaseEntityRestApi<WaterRole> implements RoleRestApi {
+    @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(RoleRestControllerImpl.class.getName());
 
     @Inject

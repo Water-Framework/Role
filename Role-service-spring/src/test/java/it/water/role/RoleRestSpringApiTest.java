@@ -17,22 +17,16 @@
 
 package it.water.role;
 
-import com.intuit.karate.junit5.Karate;
-import it.water.core.api.bundle.Runtime;
-import it.water.core.api.model.User;
-import it.water.core.api.registry.ComponentRegistry;
-import it.water.core.api.user.UserManager;
-import it.water.core.security.model.principal.UserPrincipal;
-import it.water.core.testing.utils.runtime.TestRuntimeUtils;
-import it.water.implementation.spring.security.SpringSecurityContext;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.platform.commons.util.RuntimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.Collections;
+import com.intuit.karate.junit5.Karate;
+
+import it.water.core.api.registry.ComponentRegistry;
+import it.water.core.testing.utils.runtime.TestRuntimeUtils;
 
 @SpringBootTest(classes = RoleApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

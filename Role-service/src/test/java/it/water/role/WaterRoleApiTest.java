@@ -80,6 +80,7 @@ class WaterRoleApiTest implements Service {
     private UserManager userManager;
 
     //admin user
+    @SuppressWarnings("unused")
     private it.water.core.api.model.User adminUser;
     private it.water.core.api.model.User roleManagerUser;
     private it.water.core.api.model.User roleViewerUser;
