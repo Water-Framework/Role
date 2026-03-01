@@ -90,3 +90,14 @@ publishing {
         	}
     }
  }
+
+waterDescriptor {
+    moduleId    = 'it.water.role'
+    displayName = 'Role Service'
+    description = 'Role management service for Water Framework access control'
+
+    input {
+        standardPin 'jdbc'
+        standardPin 'service-discovery'
+    }
+}

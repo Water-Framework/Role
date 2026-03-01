@@ -58,4 +58,10 @@ publishing {
         	}
     }
  }
- 
+
+waterDescriptor {
+    moduleId    = 'it.water.role.spring'
+    displayName = 'Role Service Spring'
+    description = 'Spring Boot runtime variant of Role Service'
+    inheritsFrom project(':Role-service')
+}
