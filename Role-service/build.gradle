@@ -96,8 +96,11 @@ waterDescriptor {
     displayName = 'Role Service'
     description = 'Role management service for Water Framework access control'
 
-    input {
+    output {
         standardPin 'jdbc'
+    }
+
+    input {
         standardPin 'service-discovery'
     }
 }
