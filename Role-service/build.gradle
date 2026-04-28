@@ -95,6 +95,9 @@ waterDescriptor {
     moduleId    = 'it.water.role'
     displayName = 'Role Service'
     description = 'Role management service for Water Framework access control'
+    componentsPackage = 'it.water.role.service'
+    repositoryPackage = 'it.water.role.repository'
+    entitiesPackage   = 'it.water.role.model'
 
     output {
         standardPin 'jdbc'
